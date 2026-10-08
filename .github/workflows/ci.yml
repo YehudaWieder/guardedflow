@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run ruff check .
+        working-directory: backend
+      - run: uv run mypy --strict app flowpermit
+        working-directory: backend
+      - run: uv run pytest
+        working-directory: backend
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: astral-sh/setup-uv@v3
+      - run: pnpm install --frozen-lockfile
+        working-directory: frontend
+      - run: pnpm gen:types
+        working-directory: frontend
+      - run: pnpm typecheck
+        working-directory: frontend
+      - run: pnpm test
+        working-directory: frontend
