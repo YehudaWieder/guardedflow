@@ -4,19 +4,20 @@ both the Run Manager and the code generator. One schema, two destinations.
 
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
 
+from app.core.schemas.base import StrictModel
 from app.core.schemas.policy import ToolPolicy
 
 NODE_ID_PATTERN = r"^[a-z][a-z0-9_]{0,40}$"
 
 
-class Position(BaseModel):
+class Position(StrictModel):
     x: float
     y: float
 
 
-class BaseNode(BaseModel):
+class BaseNode(StrictModel):
     id: str = Field(pattern=NODE_ID_PATTERN)
     label: str
     position: Position
@@ -41,13 +42,13 @@ class MCPToolNode(BaseNode):
     tool_policy_id: str
 
 
-class Condition(BaseModel):
+class Condition(StrictModel):
     ref: str
     op: Literal["eq", "ne", "gt", "lt", "contains", "in", "exists"]
     value: str | int | float | bool | list[Any] | None = None
 
 
-class Route(BaseModel):
+class Route(StrictModel):
     target: str
     match: Literal["all", "any"] = "all"
     conditions: list[Condition]
@@ -76,13 +77,13 @@ Node = Annotated[
 ]
 
 
-class Edge(BaseModel):
+class Edge(StrictModel):
     id: str
     source: str
     target: str
 
 
-class GraphDocument(BaseModel):
+class GraphDocument(StrictModel):
     schema_version: Literal[1] = 1
     name: str
     entry: str

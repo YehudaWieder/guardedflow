@@ -6,17 +6,19 @@ defines the shape of a policy, not the enforcement logic.
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from app.core.schemas.base import StrictModel
 
 
-class ArgRule(BaseModel):
+class ArgRule(StrictModel):
     arg: str
     pattern: str | None = None
     allowed: list[str] | None = None
     max_length: int | None = None
 
 
-class ToolGrant(BaseModel):
+class ToolGrant(StrictModel):
     server_id: str
     tool: str
     schema_hash: str
@@ -25,7 +27,7 @@ class ToolGrant(BaseModel):
     max_calls_per_run: int = 10
 
 
-class ToolPolicy(BaseModel):
+class ToolPolicy(StrictModel):
     """A named set of grants. Any server/tool pair not listed here is blocked."""
 
     id: str

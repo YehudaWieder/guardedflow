@@ -5,10 +5,12 @@ this shape — there is no second event format.
 
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from app.core.schemas.base import StrictModel
 
 
-class EventBase(BaseModel):
+class EventBase(StrictModel):
     run_id: str
     seq: int
     ts: float
