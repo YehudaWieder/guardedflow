@@ -6,9 +6,10 @@ import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { compile } from "json-schema-to-typescript";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const BACKEND_DIR = new URL("../../backend", import.meta.url).pathname;
-const OUT_DIR = new URL("../src/generated", import.meta.url).pathname;
+const BACKEND_DIR = fileURLToPath(new URL("../../backend", import.meta.url));
+const OUT_DIR = fileURLToPath(new URL("../src/generated", import.meta.url));
 const SCHEMA_DIR = join(tmpdir(), "guardedflow-schemas");
 
 rmSync(SCHEMA_DIR, { recursive: true, force: true });
@@ -22,8 +23,27 @@ execFileSync(
 
 mkdirSync(OUT_DIR, { recursive: true });
 
+// Pydantic puts a per-field `title` (e.g. "Id", "Label") on every property
+// schema. json-schema-to-typescript hoists a named type alias for anything
+// with a title, so left alone this produces an alias per field (`Id`, `Id1`,
+// `Id2`, ...) instead of inlined types. Stripping field-level titles — but
+// keeping each model's own title, which names its generated interface —
+// gets the inlined output we actually want.
+function stripFieldTitles(node) {
+  if (node.properties) {
+    for (const prop of Object.values(node.properties)) {
+      delete prop.title;
+      stripFieldTitles(prop);
+    }
+  }
+  if (node.items) stripFieldTitles(node.items);
+  return node;
+}
+
 for (const file of readdirSync(SCHEMA_DIR).filter((f) => f.endsWith(".json"))) {
   const schema = JSON.parse(readFileSync(join(SCHEMA_DIR, file), "utf-8"));
+  stripFieldTitles(schema);
+  for (const def of Object.values(schema.$defs ?? {})) stripFieldTitles(def);
   const ts = await compile(schema, schema.title, { bannerComment: "" });
   const outName = file.replace(/\.json$/, ".ts");
   writeFileSync(

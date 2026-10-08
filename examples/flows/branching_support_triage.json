@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "name": "branching_support_triage",
+  "entry": "classify",
+  "nodes": [
+    {
+      "type": "agent",
+      "id": "classify",
+      "label": "Classify Ticket",
+      "position": { "x": 0, "y": 0 },
+      "model": "gpt-4o-mini",
+      "system_prompt": "Classify the support ticket as either 'billing' or 'general'.",
+      "input_template": "Classify the customer's ticket.",
+      "output_schema": {
+        "type": "object",
+        "properties": { "label": { "type": "string", "enum": ["billing", "general"] } },
+        "required": ["label"]
+      }
+    },
+    {
+      "type": "router",
+      "id": "route",
+      "label": "Route by Label",
+      "position": { "x": 300, "y": 0 },
+      "routes": [
+        {
+          "target": "billing_agent",
+          "match": "all",
+          "conditions": [
+            { "ref": "outputs.classify.label", "op": "eq", "value": "billing" }
+          ]
+        }
+      ],
+      "default_target": "general_agent",
+      "max_iterations": 5
+    },
+    {
+      "type": "agent",
+      "id": "billing_agent",
+      "label": "Billing Agent",
+      "position": { "x": 600, "y": -100 },
+      "model": "gpt-4o-mini",
+      "system_prompt": "Handle billing questions for the customer.",
+      "input_template": "Respond to this billing inquiry."
+    },
+    {
+      "type": "agent",
+      "id": "general_agent",
+      "label": "General Agent",
+      "position": { "x": 600, "y": 100 },
+      "model": "gpt-4o-mini",
+      "system_prompt": "Handle general support questions for the customer.",
+      "input_template": "Respond to this general inquiry."
+    }
+  ],
+  "edges": [
+    { "id": "classify__route", "source": "classify", "target": "route" }
+  ]
+}

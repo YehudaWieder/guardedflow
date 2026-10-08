@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "name": "validated_contact_extraction",
+  "entry": "extract",
+  "nodes": [
+    {
+      "type": "agent",
+      "id": "extract",
+      "label": "Extract Contact",
+      "position": { "x": 0, "y": 0 },
+      "model": "gpt-4o-mini",
+      "system_prompt": "Extract the customer's name and email address as JSON.",
+      "input_template": "Extract structured contact details from the customer's message.",
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" }
+        },
+        "required": ["name", "email"]
+      }
+    },
+    {
+      "type": "validator",
+      "id": "validate",
+      "label": "Validate Contact",
+      "position": { "x": 300, "y": 0 },
+      "source": "extract",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "email": { "type": "string", "pattern": "^[^@]+@[^@]+\\.[^@]+$" }
+        },
+        "required": ["name", "email"]
+      },
+      "retry_target": "extract",
+      "max_retries": 2
+    },
+    {
+      "type": "agent",
+      "id": "finalize",
+      "label": "Confirm Contact",
+      "position": { "x": 600, "y": 0 },
+      "model": "gpt-4o-mini",
+      "system_prompt": "Confirm the extracted contact details back to the user.",
+      "input_template": "Confirm the contact details: {{outputs.extract.text}}"
+    }
+  ],
+  "edges": [
+    { "id": "extract__validate", "source": "extract", "target": "validate" },
+    { "id": "validate__finalize", "source": "validate", "target": "finalize" }
+  ]
+}

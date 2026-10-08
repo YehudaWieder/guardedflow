@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "name": "linear_draft_and_send",
+  "entry": "draft_reply",
+  "nodes": [
+    {
+      "type": "agent",
+      "id": "draft_reply",
+      "label": "Draft Reply",
+      "position": { "x": 0, "y": 0 },
+      "model": "gpt-4o-mini",
+      "system_prompt": "You are a support agent. Draft a short, polite reply to the customer's open ticket.",
+      "input_template": "Draft a reply to the customer's latest message.",
+      "temperature": 0.2,
+      "max_tokens": 512
+    },
+    {
+      "type": "mcp_tool",
+      "id": "send_reply",
+      "label": "Send Reply",
+      "position": { "x": 300, "y": 0 },
+      "server_id": "support_mcp",
+      "tool_name": "send_email",
+      "arguments": {
+        "to": "customer@example.com",
+        "body": "{{outputs.draft_reply.text}}"
+      },
+      "tool_policy_id": "support_tools"
+    }
+  ],
+  "edges": [
+    { "id": "draft_reply__send_reply", "source": "draft_reply", "target": "send_reply" }
+  ],
+  "policies": [
+    {
+      "id": "support_tools",
+      "grants": [
+        {
+          "server_id": "support_mcp",
+          "tool": "send_email",
+          "schema_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000",
+          "approval": "on_risk",
+          "arg_rules": [
+            { "arg": "to", "pattern": "^[^@]+@[^@]+\\.[^@]+$" }
+          ],
+          "max_calls_per_run": 3
+        }
+      ]
+    }
+  ]
+}
