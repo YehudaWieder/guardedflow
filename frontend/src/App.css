@@ -39,95 +39,524 @@
   min-width: 0;
 }
 
-.palette,
-.panel {
-  width: 240px;
+.palette {
+  width: 180px;
   flex-shrink: 0;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
 }
 
-.palette {
-  border-right: 1px solid var(--border);
+.palette__title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.palette__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-h);
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.palette__item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.palette__item svg {
+  flex-shrink: 0;
+}
+
+.palette__item--agent {
+  border-color: var(--agent-border);
+  color: var(--agent);
+}
+
+.palette__item--mcp-tool {
+  border-color: var(--tool-border);
+  color: var(--tool);
 }
 
 .panel {
+  width: 300px;
+  flex-shrink: 0;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
   border-left: 1px solid var(--border);
+  background: var(--surface);
 }
 
 .panel--empty {
+  align-items: center;
+  justify-content: center;
   color: var(--text);
-  font-size: 14px;
-}
-
-.panel label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
   font-size: 13px;
+  text-align: center;
 }
 
-.panel input,
-.panel textarea {
+.panel__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel__delete {
+  margin-left: auto;
+  padding: 6px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: none;
+  color: #e11d48;
   font: inherit;
-  padding: 4px 6px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.panel__delete:hover {
+  background: rgba(225, 29, 72, 0.1);
+  border-color: #e11d48;
+}
+
+.canvas__toast {
+  max-width: 320px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #e11d48;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.panel__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  color: white;
+}
+
+.panel__icon--agent {
+  background: linear-gradient(145deg, var(--agent), var(--agent-dark));
+}
+
+.panel__icon--mcp-tool {
+  background: var(--tool);
+  border-radius: 0;
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0% 50%);
+}
+
+.panel__kind {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+}
+
+.panel__id {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-h);
 }
 
-.panel textarea {
-  min-height: 60px;
+.panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel__section + .panel__section {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.panel__section-title {
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text);
+}
+
+.panel--agent .panel__section-title {
+  color: var(--agent);
+}
+
+.panel--mcp-tool .panel__section-title {
+  color: var(--tool);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12.5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field__label {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.field__hint {
+  font-size: 11px;
+  color: var(--text);
+}
+
+.field__error {
+  font-size: 11px;
+  color: #e11d48;
+}
+
+.field input,
+.field textarea,
+.field select {
+  font: inherit;
+  padding: 7px 9px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text-h);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--panel-focus);
+  box-shadow: 0 0 0 3px var(--panel-focus-bg);
+}
+
+.panel--agent {
+  --panel-focus: var(--agent);
+  --panel-focus-bg: var(--agent-bg);
+}
+
+.panel--mcp-tool {
+  --panel-focus: var(--tool);
+  --panel-focus-bg: var(--tool-bg);
+}
+
+.field textarea {
+  min-height: 64px;
   resize: vertical;
+}
+
+.field textarea.mono,
+.field input.mono {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.slider-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-field input[type="range"] {
+  flex: 1;
+  accent-color: var(--panel-focus);
+}
+
+.slider-field__number {
+  width: 52px;
+  flex: none;
 }
 
 .arguments-editor {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 13px;
 }
 
 .arguments-editor__row {
   display: flex;
-  gap: 4px;
+  gap: 6px;
 }
 
 .arguments-editor__row input {
   flex: 1;
   min-width: 0;
+  font: inherit;
+  padding: 7px 9px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.arguments-editor__remove {
+  flex-shrink: 0;
+  width: 30px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.arguments-editor__add {
+  align-self: flex-start;
+  padding: 6px 10px;
+  border: 1.5px dashed var(--tool-border);
+  border-radius: 7px;
+  background: none;
+  color: var(--tool);
+  font: inherit;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .flow-node {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 12px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
   background: var(--bg);
-  min-width: 160px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.flow-node.is-selected {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent-bg);
+.flow-node:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.flow-node__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: var(--border);
+  color: var(--text);
+}
+
+.flow-node__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .flow-node__kind {
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   color: var(--text);
 }
 
 .flow-node__label {
   font-weight: 600;
   color: var(--text-h);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
 }
 
 .flow-node__detail {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.flow-node__server {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Agent: the hub a flow is built around — a head above a body, with the
+   in/out handles styled as hands reaching out from the body's sides. */
+.flow-node--agent {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 82px;
+  padding: 19px 6px 8px;
+  border-width: 2px;
+  border-color: var(--agent-border);
+  background: var(--agent-bg-soft);
+  border-radius: 10px;
+}
+
+.flow-node--agent__head {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--agent), var(--agent-dark));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+}
+
+/* A small antenna reads as "head", not just a colored circle. */
+.flow-node--agent__head::before,
+.flow-node--agent__head::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--agent-dark);
+}
+
+.flow-node--agent__head::before {
+  top: -5px;
+  width: 2px;
+  height: 5px;
+}
+
+.flow-node--agent__head::after {
+  top: -7px;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+}
+
+.flow-node--agent .flow-node__kind {
+  color: var(--agent);
+  font-size: 8px;
+}
+
+.flow-node--agent .flow-node__label {
+  font-size: 11px;
+  max-width: 70px;
+}
+
+.flow-node--agent .flow-node__detail {
+  font-size: 9.5px;
+  max-width: 70px;
+}
+
+.flow-node--agent.is-selected {
+  border-color: var(--agent);
+  box-shadow: 0 0 0 4px var(--agent-bg);
+}
+
+.flow-node--agent .react-flow__handle {
+  width: 9px;
+  height: 14px;
+  border-radius: 5px;
+  background: var(--agent);
+  border: 1.5px solid var(--bg);
+}
+
+.flow-node--agent .react-flow__handle-left {
+  left: -9px;
+}
+
+.flow-node--agent .react-flow__handle-right {
+  right: -9px;
+}
+
+/* MCP Tool: a small utility the agent calls — a hex "nut" badge (mechanical,
+   not organic like the agent's head) on a noticeably smaller card. */
+.flow-node--mcp-tool {
+  width: 120px;
+  align-items: center;
+  padding: 6px 9px;
+  gap: 7px;
+  border-color: var(--tool-border);
+  background: var(--tool-bg-soft);
+  border-radius: 7px;
+}
+
+.flow-node--mcp-tool .flow-node__badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0% 50%);
+  background: var(--tool);
+  color: white;
+}
+
+.flow-node--mcp-tool .flow-node__badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.flow-node--mcp-tool .flow-node__label {
+  font-size: 11px;
+  max-width: 82px;
+}
+
+.flow-node--mcp-tool .flow-node__server {
+  display: block;
+  width: auto;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--tool);
+  font-size: 9px;
+  max-width: 82px;
+}
+
+.flow-node--mcp-tool.is-selected {
+  border-color: var(--tool);
+  box-shadow: 0 0 0 4px var(--tool-bg);
 }

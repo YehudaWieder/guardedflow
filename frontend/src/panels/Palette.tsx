@@ -1,3 +1,4 @@
+import { AgentIcon, ToolIcon } from "../nodes/icons";
 import { useFlowStore } from "../store/flowStore";
 
 export function Palette() {
@@ -5,11 +6,22 @@ export function Palette() {
 
   return (
     <aside className="palette">
-      <button type="button" onClick={() => addNode("agent", { x: 80, y: 80 })}>
-        + Agent
+      <div className="palette__title">Add node</div>
+      <button
+        type="button"
+        className="palette__item palette__item--agent"
+        onClick={() => addNode("agent")}
+      >
+        <AgentIcon />
+        <span>Agent</span>
       </button>
-      <button type="button" onClick={() => addNode("mcp_tool", { x: 80, y: 220 })}>
-        + MCP Tool
+      <button
+        type="button"
+        className="palette__item palette__item--mcp-tool"
+        onClick={() => addNode("mcp_tool")}
+      >
+        <ToolIcon />
+        <span>MCP Tool</span>
       </button>
     </aside>
   );

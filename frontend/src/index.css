@@ -2,11 +2,26 @@
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
+  --surface: #faf9fc;
   --border: #e5e4e7;
   --accent: #aa3bff;
   --accent-bg: rgba(170, 59, 255, 0.1);
 
+  /* Agent is the hub of a flow, so it takes the app's primary accent. */
+  --agent: var(--accent);
+  --agent-dark: #7a1fd1;
+  --agent-bg: var(--accent-bg);
+  --agent-bg-soft: rgba(170, 59, 255, 0.04);
+  --agent-border: rgba(170, 59, 255, 0.45);
+
+  /* Tools are utilities an agent calls — a distinct, calmer hue. */
+  --tool: #0d9488;
+  --tool-bg: rgba(13, 148, 136, 0.12);
+  --tool-bg-soft: rgba(13, 148, 136, 0.05);
+  --tool-border: rgba(13, 148, 136, 0.35);
+
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
 
   font: 14px/145% var(--sans);
   color-scheme: light dark;
@@ -23,9 +38,19 @@
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #16171d;
+    --surface: #1b1c24;
     --border: #2e303a;
     --accent: #c084fc;
     --accent-bg: rgba(192, 132, 252, 0.15);
+
+    --agent-dark: #9333ea;
+    --agent-bg-soft: rgba(192, 132, 252, 0.06);
+    --agent-border: rgba(192, 132, 252, 0.45);
+
+    --tool: #2dd4bf;
+    --tool-bg: rgba(45, 212, 191, 0.15);
+    --tool-bg-soft: rgba(45, 212, 191, 0.06);
+    --tool-border: rgba(45, 212, 191, 0.4);
   }
 }
 

@@ -23,7 +23,7 @@ export function Toolbar() {
           </option>
           {nodes.map((node) => (
             <option key={node.id} value={node.id}>
-              {node.data.label} ({node.id})
+              {node.data.label}
             </option>
           ))}
         </select>
